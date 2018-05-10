@@ -1,9 +1,9 @@
 # Object files
-obj/
+obj/*
 *.o
 
 # Libraries
-lib/
+lib/*
 *.a
 *.so
 *.so.*
