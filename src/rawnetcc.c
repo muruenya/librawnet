@@ -1,7 +1,7 @@
 /* rawnetcc - Compiles an executable using the librawnet library and gives
- *            CAP_NET_RAW and CAP_NET_ADMIN capabilities.
- *
- * Copyright (C) 2010 Manuel Urueña <muruenya@it.uc3m.es>
+ *            CAP_NET_RAW and CAP_NET_ADMIN capabilities or sets the SUID bit
+ *            to the generated executable.
+ * Copyright (C) 2012 Manuel Urueña <muruenya@it.uc3m.es>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,10 +26,13 @@
 #include <unistd.h>
 #include <errno.h>
 
+#define ROOT_UID 0
+
 extern int errno;
 
 static char* MYSELF;
 
+/* Prints the specified execv command as a single command line. */
 void printcmd ( char* argv[] )
 {
   int i = 0;
@@ -47,11 +50,15 @@ void printcmd ( char* argv[] )
   printf("\n");
 }
 
-int system_uid ( char* argv[] )
+
+/* Executes the specified command as a separate process with execv in order to 
+ * work when called from a SUID program. */
+int system_suid ( char* argv[] )
 {
   int err;
   int wait_status;
 
+  /* Print command to be executed */
   printcmd(argv);
 
   pid_t child_pid = fork();
@@ -62,17 +69,17 @@ int system_uid ( char* argv[] )
     return -1;
 
   } else if (child_pid == 0) {
-    /* Child Process: Print command and execute it  */
-
+    /* Child Process: Execute the command  */
     execv(argv[0], argv);
 
-    /* This code should never execute but in case of Error */
+    /* This code should never execute but in case of execv Error: 
+     *   Abort child process! */
     fprintf(stderr, "%s: Error in execv(\"%s\"): %s\n",
             MYSELF, argv[0], strerror(errno));
     exit(-2);
   }
 
-  /* Parent Process: Wait for the child */
+  /* Parent Process: Wait for the child process */
   err = wait(&wait_status);
   if (err == -1) {
     fprintf(stderr, "%s: Error in wait(\"%s\"): %s\n", 
@@ -88,6 +95,7 @@ int system_uid ( char* argv[] )
   
   return WEXITSTATUS(wait_status);
 }
+
 
 int main ( int argc, char* argv[] )
 {
@@ -107,7 +115,6 @@ int main ( int argc, char* argv[] )
    * which could lead to overwrite source code. */
   int file_exists = (access(exec_file, F_OK) == 0);
   if (file_exists) {
-
     char* file_ext = rindex(exec_file, '.');
     int file_dot_c = (file_ext != NULL) && (strcasecmp(file_ext, ".c") == 0);
     if (file_dot_c) {
@@ -118,6 +125,15 @@ int main ( int argc, char* argv[] )
               MYSELF);
       exit(-1);
     }
+  }
+
+  /* Give up superuser rights temporarily to compile, regain them later. */
+  uid_t uid = getuid();
+  int err = seteuid(uid);
+  if (err != 0) {
+    fprintf(stderr, "%s: Cannot set euid to %d: Aborting !!\n", 
+            MYSELF, uid);
+    exit(-1);
   }
 
   /* Generate compilation command & execute with system() call */
@@ -132,35 +148,50 @@ int main ( int argc, char* argv[] )
 
   printf("%s\n", gcc_command);
 
-  int err = system(gcc_command);
+  err = system(gcc_command);
   if (err != 0) {
     exit(err);
   }
 
-  /* Check user rights */
+  /* Regain superuser rights to set capabilities/permissions */
+  err = setuid(ROOT_UID);
+  if (err != 0) {
+    fprintf(stderr, "%s: Cannot set uid to %d: Aborting !!\n", 
+            MYSELF, ROOT_UID);
+    exit(-1);
+  }
+
+  /* Check super-user rights */
   uid_t euid = geteuid();
-  if (euid != 0) {
+  if (euid != ROOT_UID) {
     fprintf(stderr, 
-       "%s MUST be executed with super-user rights or suid: Aborting !!\n",
-            MYSELF);
+       "ERROR: %s MUST be executed with super-user rights or suid bit: Aborting!\n",
+       MYSELF);
     fprintf(stderr,
-       "%s is not correctly installed. Please contact the administrator.\n",
-            MYSELF);
+       "%s is not correctly installed. Please contact the system's administrator.\n",
+       MYSELF);
     exit(-1);
   }
   
-  /* Generate setcap command. 
-     It must be executed with execv() because of suid bit */
-  int setcap_argc = 3;
-  char* setcap_argv[setcap_argc + 1]; /* +1 for NULL */
-  setcap_argv[0] = "/sbin/setcap";
-  setcap_argv[1] = "cap_net_raw,cap_net_admin=eip";
-  setcap_argv[2] = exec_file;
-  setcap_argv[3] = NULL;
+  /* Generate setcap command (it may appear on /sbin/ or /usr/sbin/).
+     It must be executed with execv() because of the suid bit */
+  char* setcap_path = "/sbin/setcap";
+  err = access(setcap_path, R_OK | X_OK); 
+  if (err != 0) {
+    setcap_path = "/usr/sbin/setcap";
+  }
 
-  err = system_uid(setcap_argv);
+  int setcap_argc = 4;
+  char* setcap_argv[setcap_argc + 1]; /* +1 because of final NULL */
+  setcap_argv[0] = setcap_path;
+  setcap_argv[1] = "-q";
+  setcap_argv[2] = "cap_net_raw,cap_net_admin=eip";
+  setcap_argv[3] = exec_file;
+  setcap_argv[4] = NULL;
+
+  err = system_suid(setcap_argv);
   if (err == 0) {
-    /* Setcap has worked: Print command & exit successfully */
+    /* Setcap has worked: Exit successfully */
     exit(0);
   }
 
@@ -172,7 +203,7 @@ int main ( int argc, char* argv[] )
   chown_argv[2] = exec_file;
   chown_argv[3] = NULL;
 
-  err = system_uid(chown_argv);
+  err = system_suid(chown_argv);
   if (err != 0) {
     fprintf(stderr, "%s: Cannot change owner of \"%s\" to root: Aborting !!\n",
             MYSELF, exec_file);
@@ -182,11 +213,11 @@ int main ( int argc, char* argv[] )
   int chmod_argc = 3;
   char* chmod_argv[chmod_argc + 1];
   chmod_argv[0] = "/bin/chmod";
-  chmod_argv[1] = "4755";
+  chmod_argv[1] = "4775";
   chmod_argv[2] = exec_file;
   chmod_argv[3] = NULL;
 
-  err = system_uid(chmod_argv);
+  err = system_suid(chmod_argv);
   if (err != 0) {
     fprintf(stderr, "%s: Cannot set suid bit to \"%s\": Aborting !!\n", 
             MYSELF, exec_file);

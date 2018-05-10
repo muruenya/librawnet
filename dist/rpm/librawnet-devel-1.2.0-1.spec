@@ -1,11 +1,11 @@
 Summary: Library to develop "raw" network protocols.
 Name: librawnet-devel
-Version: 1.1.1
+Version: 1.2.0
 Release: 1
 Copyright: GPL
 Group: Development/Libraries
-Source: http://www.it.uc3m.es/muruenya/librawnet/librawnet-1.1.1.tar.gz
-Patch: rawnetcc_c.patch
+Source: http://www.it.uc3m.es/muruenya/librawnet/librawnet-1.2.0.tar.gz
+#Patch: rawnetcc_c.patch
 BuildRoot: /var/tmp/%{name}-buildroot
 #Requires: libcap-utils
 
@@ -18,7 +18,7 @@ Install librawnet if you would like to develop a network stack from scratch.
 
 %prep
 %setup -q
-%patch -p1 -b .buildroot
+#%patch -p1 -b .buildroot
 
 %build
 make all RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
@@ -126,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/es/man3/rawnetcc.3.lzma
 
 %changelog
+* Mon Oct 01 2012 Manuel Urueña <muruenya@it.uc3m.es> 
+- Version 1.2.0 released
+- rawnetcc now compiles without superuser rights and looks for setcap path
 * Wed Oct 13 2010 Manuel Urueña <muruenya@it.uc3m.es> 
 - Version 1.1.1 released
 - Solved non-infinite timeout bug in timerms.h

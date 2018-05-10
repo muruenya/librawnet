@@ -1,3 +1,9 @@
+librawnet-devel (1.2.0) unstable; urgency=high
+
+  * Updates to make a better use of Linux capabilities.
+
+ -- Carlos J. Bernardos <cjbc@it.uc3m.es>  Tue, 16 Oct 2012 11:24:00 +0200
+
 librawnet-devel (1.1.0) unstable; urgency=high
 
   * Solves a nasty bug in the "timerms" library for i386 machines.

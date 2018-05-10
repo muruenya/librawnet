@@ -1,3 +1,7 @@
+2012-10-01: Manuel Urueña <muruenya@it.uc3m.es> 
+    * Version 1.2.0 released
+    * rawnetcc now compiles without superuser rights and looks for setcap path
+
 2010-10-13: Manuel Urueña <muruenya@it.uc3m.es> 
     * Version 1.1.1 released
     * Solved non-infinite timeout bug in timerms.h
