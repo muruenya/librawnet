@@ -6,8 +6,8 @@ RPMBUILD_RPMS=$(RPMBUILD_ROOT)/RPMS
 RPMBUILD_RPMS_i386=$(RPMBUILD_RPMS)/i386
 RPMBUILD_RPMS_x86_64=$(RPMBUILD_RPMS)/x86_64
 
-VERSION=1.0.1
-RELEASE=1
+VERSION=1.1.0
+RPM_RELEASE=1
 
 .PHONY: clean i386 x86_64 all
 
@@ -21,7 +21,7 @@ clean:
 	rm -f  $(RPMBUILD_RPMS_x86_64)/*
 	rm -f  *.rpm
 
-i386: librawnet-devel-$(VERSION)-$(RELEASE).rpm
+i386: librawnet-devel-$(VERSION)-$(RPM_RELEASE).rpm
 
 $(RPMBUILD_SPECS)/%.spec: %.spec
 	cp -f $< $@
@@ -35,17 +35,17 @@ $(RPMBUILD_SOURCES)/librawnet-$(VERSION).tar.gz:
 	tar cvzh -C ../../../ -f $@ librawnet-devel-$(VERSION)/
 	rm -f ../../../librawnet-devel-$(VERSION)
 
-$(RPMBUILD_RPMS_i386)/librawnet-devel-$(VERSION)-$(RELEASE).i386.rpm: \
+$(RPMBUILD_RPMS_i386)/librawnet-devel-$(VERSION)-$(RPM_RELEASE).i386.rpm: \
 			$(RPMBUILD_SOURCES)/librawnet-$(VERSION).tar.gz \
 			$(RPMBUILD_SOURCES)/rawnetcc_c.patch \
-			$(RPMBUILD_SPECS)/librawnet-devel-$(VERSION)-$(RELEASE).spec
-	setarch i386 rpmbuild -ba --target=i386 $(RPMBUILD_SPECS)/librawnet-devel-$(VERSION)-$(RELEASE).spec
+			$(RPMBUILD_SPECS)/librawnet-devel-$(VERSION)-$(RPM_RELEASE).spec
+	setarch i386 rpmbuild -ba --target=i386 $(RPMBUILD_SPECS)/librawnet-devel-$(VERSION)-$(RPM_RELEASE).spec
 
-librawnet-devel-$(VERSION)-$(RELEASE).rpm: $(RPMBUILD_RPMS_i386)/librawnet-devel-$(VERSION)-$(RELEASE).i386.rpm
+librawnet-devel-$(VERSION)-$(RPM_RELEASE).rpm: $(RPMBUILD_RPMS_i386)/librawnet-devel-$(VERSION)-$(RPM_RELEASE).i386.rpm
 	cp $< $@
 
 
-x86_64: lib64rawnet-devel-$(VERSION)-$(RELEASE).rpm	    
+x86_64: lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).rpm	    
 
 $(RPMBUILD_SOURCES)/lib64rawnet-$(VERSION).tar.gz:
 	make -C ../../ clean
@@ -53,11 +53,11 @@ $(RPMBUILD_SOURCES)/lib64rawnet-$(VERSION).tar.gz:
 	tar cvzh -C ../../../ -f $@ lib64rawnet-devel-$(VERSION)/
 	rm -f ../../../lib64rawnet-devel-$(VERSION)
 
-$(RPMBUILD_RPMS_x86_64)/lib64rawnet-devel-$(VERSION)-$(RELEASE).x86_64.rpm: \
+$(RPMBUILD_RPMS_x86_64)/lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).x86_64.rpm: \
 			$(RPMBUILD_SOURCES)/lib64rawnet-$(VERSION).tar.gz \
 			$(RPMBUILD_SOURCES)/rawnetcc_c.patch \
-			$(RPMBUILD_SPECS)/lib64rawnet-devel-$(VERSION)-$(RELEASE).spec
-	rpmbuild -ba --target=x86_64 $(RPMBUILD_SPECS)/lib64rawnet-devel-$(VERSION)-$(RELEASE).spec
+			$(RPMBUILD_SPECS)/lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).spec
+	rpmbuild -ba --target=x86_64 $(RPMBUILD_SPECS)/lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).spec
 
-lib64rawnet-devel-$(VERSION)-$(RELEASE).rpm: $(RPMBUILD_RPMS_x86_64)/lib64rawnet-devel-$(VERSION)-$(RELEASE).x86_64.rpm
+lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).rpm: $(RPMBUILD_RPMS_x86_64)/lib64rawnet-devel-$(VERSION)-$(RPM_RELEASE).x86_64.rpm
 	cp $< $@

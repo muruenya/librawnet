@@ -3,11 +3,11 @@ Installation instructions of librawnet library
 1. Unpack the source code of the library
    (If you are reading this probably it is already done)
 
-   tar xvzf librawnet-1.0.2.tar.gz
+   tar xvzf librawnet-1.1.0.tar.gz
 
 2. Go to the new directory
 
-   cd librawnet-1.0.2/
+   cd librawnet-1.1.0/
 
 3. Compile the source code of the library
    (Make clean is an optional step, just in case a previous compilation has

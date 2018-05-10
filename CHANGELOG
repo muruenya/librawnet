@@ -1,3 +1,7 @@
+2010-10-12: Carlos Jesús Bernardos <cjbc@it.uc3m.es>
+    * Version 1.1.0 released
+    * Solves a nasty bug in the "timerms" library for i386 machines
+
 2010-10-04: Manuel Urueña <muruenya@it.uc3m.es> 
     * Version 1.0.2 released
     * Create install directories before copying files

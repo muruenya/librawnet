@@ -43,7 +43,10 @@ long long int timerms_time()
     return -1;
   }
 
-  time_msecs = timeval.tv_sec * 1000;
+  /* Conversion from seconds to milliseconds MUST be done with a 
+   * long long int */
+  long long int time_secs = timeval.tv_sec;
+  time_msecs  = time_secs * 1000;
   time_msecs += timeval.tv_usec / 1000;
 
   return time_msecs;
@@ -114,13 +117,12 @@ long int timerms_elapsed ( timerms_t * timer )
 {
   long int elapsed_time;
 
-  long long int now = timerms_time();
-  if ((timer == NULL) || 
-      (timer->reset_timestamp < 0) || (timer->reset_timestamp > now)) {
+  if (timer == NULL) {
     return -1;
   }
 
-  elapsed_time = now - timer->reset_timestamp;
+  long long int now = timerms_time();
+  elapsed_time = (long int) (now - timer->reset_timestamp);
   
   return elapsed_time;
 }
@@ -151,16 +153,15 @@ long int timerms_left ( timerms_t * timer )
 {
   long int time_left;
 
-  long long int now = timerms_time();
-  if ((timer == NULL) || 
-      (timer->reset_timestamp < 0) || (timer->reset_timestamp > now)) {
+  if (timer == NULL) {
     return -1;
   }
 
   if (timer->timeout_timestamp < 0) {
     time_left = timer->timeout_timestamp - 1;
   } else {
-    time_left = (long) (timer->timeout_timestamp - now);
+    long long int now = timerms_time();
+    time_left = (long int) (timer->timeout_timestamp - now);
     if (time_left < 0) {
       time_left = 0;
     }

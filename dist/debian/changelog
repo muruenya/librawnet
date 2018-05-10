@@ -1,3 +1,9 @@
+librawnet-devel (1.1.0) unstable; urgency=high
+
+  * Solves a nasty bug in the "timerms" library for i386 machines.
+
+ -- Carlos J. Bernardos <cjbc@it.uc3m.es>  Tue, 12 Oct 2010 23:55:00 +0200
+
 librawnet-devel (1.0.1) unstable; urgency=low
 
   * Minor fixes, added rawnetcc manual page.

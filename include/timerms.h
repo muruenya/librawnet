@@ -16,9 +16,9 @@
  * License along with librawnet.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _TIMERMS_H
 #define _TIMERMS_H
+
 /* Estructura opaca que almacena el estado de un temporizador con precisión de
  * milisegundos.
  *
@@ -26,8 +26,8 @@
  * utilice las funciones proporcionadas por la librería.
  */
 struct timerms {
-  long long int reset_timestamp;
-  long long int timeout_timestamp;
+  unsigned long long int reset_timestamp;
+  unsigned long long int timeout_timestamp;
 };
 
 typedef struct timerms timerms_t;
