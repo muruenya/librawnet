@@ -1,3 +1,9 @@
+2010-09-24: Carlos Jesús Bernardos <cjbc@it.uc3m.es>
+    * Version 1.0.1 released
+    * Added support for .deb Linux distributions
+    * rawnetcc modified for different setcap paths
+    * Manual pages of rawnetcc added
+
 2010-09-01: Manuel Urueña <muruenya@it.uc3m.es>
 	* Version 1.0 released
 	* First release

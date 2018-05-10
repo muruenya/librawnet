@@ -1,0 +1,11 @@
+librawnet-devel (1.0.1) unstable; urgency=low
+
+  * Minor fixes, added rawnetcc manual page.
+
+ -- Carlos J. Bernardos <cjbc@it.uc3m.es>  Fri, 24 Sep 2010 00:07:00 +0200
+
+librawnet-devel (1.0.0) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Carlos J. Bernardos <cjbc@it.uc3m.es>  Sat, 18 Sep 2010 21:09:00 +0200

@@ -4,9 +4,9 @@
  * Copyright (C) 2010 Manuel Urueña <muruenya@it.uc3m.es>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <libgen.h>
@@ -38,7 +37,7 @@ void printcmd ( char* argv[] )
 
   while (arg != NULL) {
     if (i == 0) {
-      printf(arg);
+      printf("%s", arg);
     } else {
       printf(" %s", arg);
     }
@@ -158,15 +157,7 @@ int main ( int argc, char* argv[] )
   setcap_argv[1] = "cap_net_raw,cap_net_admin=eip";
   setcap_argv[2] = exec_file;
   setcap_argv[3] = NULL;
-  
-  err = system_uid(setcap_argv);
-  if (err == 0) {
-    /* Setcap has worked: Print command & exit successfully */
-    exit(0);
-  }
 
-  /* Try with another path. Some distributions place setcap in /usr/sbin/ */
-  setcap_argv[0] = "/usr/sbin/setcap";
   err = system_uid(setcap_argv);
   if (err == 0) {
     /* Setcap has worked: Print command & exit successfully */
