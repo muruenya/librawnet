@@ -1,3 +1,7 @@
+2010-10-04: Manuel Urueña <muruenya@it.uc3m.es> 
+    * Version 1.0.2 released
+    * Create install directories before copying files
+
 2010-09-24: Carlos Jesús Bernardos <cjbc@it.uc3m.es>
     * Version 1.0.1 released
     * Added support for .deb Linux distributions
