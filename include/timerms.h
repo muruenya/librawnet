@@ -26,8 +26,8 @@
  * utilice las funciones proporcionadas por la librería.
  */
 struct timerms {
-  unsigned long long int reset_timestamp;
-  unsigned long long int timeout_timestamp;
+  long long int reset_timestamp;
+  long long int timeout_timestamp;
 };
 
 typedef struct timerms timerms_t;

@@ -1,10 +1,10 @@
 Summary: Library to develop "raw" network protocols.
 Name: lib64rawnet-devel
-Version: 1.1.0
+Version: 1.1.1
 Release: 1
 Copyright: GPL
 Group: Development/Libraries
-Source: http://www.it.uc3m.es/muruenya/librawnet/lib64rawnet-1.1.0.tar.gz
+Source: http://www.it.uc3m.es/muruenya/librawnet/lib64rawnet-1.1.1.tar.gz
 Patch: rawnetcc_c.patch
 BuildRoot: /var/tmp/%{name}-buildroot
 #Requires: libcap-utils
@@ -126,6 +126,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/es/man3/rawnetcc.3.lzma
 
 %changelog
+* Wed Oct 13 2010 Manuel Urueña <muruenya@it.uc3m.es> 
+- Version 1.1.1 released
+- Solved non-infinite timeout bug in timerms.h
 * Tue Oct 12 2010 Carlos Jesús Bernardos <cjbc@it.uc3m.es>
 - Version 1.1.0 released
 - Solves a nasty bug in the "timerms" library for i386 machines
